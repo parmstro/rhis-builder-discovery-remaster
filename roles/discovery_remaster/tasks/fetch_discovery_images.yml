@@ -1,0 +1,15 @@
+---
+
+- name: "Ensure discovery images temporary storage"
+  ansible.builtin.file:
+    path: "{{ provisioner_image_tmp }}"
+    state: "directory"
+    mode: "0600"
+    owner: "root"
+    group: "root"
+
+- name: "Fetch the iso image"
+  ansible.builtin.fetch:
+    src: "{{ dri.destination_iso }}"
+    dest: "{{ provisioner_image_tmp }}"
+    flat: true

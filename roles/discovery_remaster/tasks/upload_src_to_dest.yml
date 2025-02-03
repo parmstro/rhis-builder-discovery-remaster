@@ -1,0 +1,18 @@
+---
+
+- name: "Upload an iso to VMware"
+  when: dri.final_dest == "vmware"
+  ansible.builtin.include_tasks: "upload_file_to_vmware.yml"
+
+# - name: "Upload an image to VMware"
+
+# - name: "Upload an image to Azure"
+
+# - name: "Upload an image to AWS"
+
+# - name: "Upload an image to Google"
+
+# - name: "Upload an image to Stack"
+
+# - name: "Upload an image to Shift"
+

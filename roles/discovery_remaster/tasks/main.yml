@@ -1,0 +1,48 @@
+---
+# tasks file for discovery-remaster
+# Command usage: 
+# /bin/discovery-remaster source_iso kernel_parameters destination_iso
+# /bin/discovery-remaster fdi-bootable-x.y.z.iso 'proxy.url=https://192.168.9.1:443 proxy.type=foreman fdi.xyz=abc...' [output.iso]
+# The kernel parameters need to be a single string
+
+- name: "Ensure the discovery images are created"
+  when: "discovery_remaster_images is defined"
+  ansible.builtin.include_tasks: "ensure_discovery_images.yml"
+  loop: "{{ discovery_remaster_images }}"
+  loop_control:
+    loop_var: dri
+  tags:
+    - tags_discovery_remaster
+    - tags_discovery_remaster_images
+
+- name: "Fetch the discovery images to localhost"
+  when: "discovery_remaster_images is defined"
+  ansible.builtin.include_tasks: "fetch_discovery_images.yml"
+  loop: "{{ discovery_remaster_images }}"
+  loop_control:
+    loop_var: dri
+  tags:
+    - tags_discovery_remaster
+    - tags_discovery_remaster_fetch
+
+- name: "Convert the discovery iso to disk image"
+  when: 
+    - "discovery_remaster_images is defined"
+    - "dri.final_format != 'iso'"
+  ansible.builtin.include_tasks: "convert_iso_to_image.yml"
+  loop: "{{ discovery_remaster_images }}"
+  loop_control:
+    loop_var: dri
+  tags:
+    - tags_discovery_remaster
+    - tags_discovery_remaster_upload
+
+- name: "Upload the discovery image to destination"
+  when: "discovery_remaster_images is defined"
+  ansible.builtin.include_tasks: "upload_src_to_dest.yml"
+  loop: "{{ discovery_remaster_images }}"
+  loop_control:
+    loop_var: dri
+  tags:
+    - tags_discovery_remaster
+    - tags_discovery_remaster_upload

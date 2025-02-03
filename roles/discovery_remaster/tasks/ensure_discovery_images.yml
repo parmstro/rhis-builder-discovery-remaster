@@ -1,0 +1,19 @@
+---
+
+# Create the kernel parameter string
+- name: "Stringify the kernel parameters"
+  ansible.builtin.set_fact:
+    _kernel_params: "{{ dri.kernel_parameters | items | map('join', '=') | join(' ') }}"
+
+- name: "Debug Output"
+  ansible.builtin.debug:
+    msg: "discovery-remaster {{ dri.source_iso }} '{{ _kernel_params }}' {{ dri.destination_iso }}" 
+
+- name: "Remaster the image"
+  ansible.builtin.command: "discovery-remaster {{ dri.source_iso }} '{{ _kernel_params }}' {{ dri.destination_iso }}"
+  register: remaster_result
+  changed_when: remaster_result.rc == 0
+
+- name: "Debug Output"
+  ansible.builtin.debug:
+    var: remaster_result.stdout

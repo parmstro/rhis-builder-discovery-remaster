@@ -1,0 +1,5 @@
+inventory
+ansible.cfg
+*.code-workspace
+settings.json
+

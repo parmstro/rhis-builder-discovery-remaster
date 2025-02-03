@@ -1,0 +1,10 @@
+---
+
+vcenter_domain: "parmstrong.ca"
+vcenter_hostname: "vcenter.{{ vcenter_domain }}"
+vcenter_username: "{{ vcenter_username_vault }}"
+vcenter_password: "{{ vcenter_password_vault }}"
+vcenter_datacenter: "{{ vcenter_domain }}"
+vcenter_datastore: "NAS1_VMS"
+vcenter_base_folder_path: "fdi_iso"
+vcenter_validate_certs: false

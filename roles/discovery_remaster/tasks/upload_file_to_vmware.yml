@@ -1,0 +1,14 @@
+---
+# Upload an image or iso to a Vmware Datastore
+
+- name: "Upload file to vmware datastore"
+  community.vmware.vsphere_copy:
+    hostname: "{{ dri.upload_dest.hostname }}"
+    username: "{{ dri.upload_dest.username }}"
+    password: "{{ dri.upload_dest.password }}"
+    src: "{{ dri.upload_dest.src_file }}"
+    datacenter: "{{ dri.upload_dest.datacenter }}"
+    datastore: "{{ dri.upload_dest.datastore }}"
+    path: "{{ dri.upload_dest.dest_file }}"
+    validate_certs: "{{ dri.upload_dest.validate_certs }}"
+  delegate_to: localhost

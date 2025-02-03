@@ -1,0 +1,68 @@
+---
+# Main Discovery-remaster variables
+
+# We will allow for the creation of multiple discovery images simultaneously
+# 
+# Available kernel paramters for fdi customization
+# 
+#     kernel_parameters:
+#       fdi.cachefacts:
+#       fdi.countdown: 
+#       fdi.dhcp_timeout
+#       fdi.dns_nameserver
+#       fdi.dns_ndots
+#       fdi.dns_search
+#       fdi.initnet
+#       fdi.ipv4.method
+#       fdi.ipv6.method
+#       fdi.ipwait
+#       fdi.nmwait
+#       fdi.proxy_cert_days
+#       fdi.pxauto
+#       fdi.pxfactname1, fdi.pxfactname2 …​ fdi.pxfactnameN
+#       fdi.pxfactvalue1, fdi.pxfactvalue2 …​ fdi.pxfactvalueN
+#       fdi.pxip
+#       fdi.pxgw
+#       fdi.pxdns
+#       fdi.pxmac
+#       fdi.rootpw
+#       fdi.ssh
+#       fdi.uploadsleep
+#       fdi.vlan.primary
+#       fdi.zips         # this can be used to help us provide a autoprovisioning name for the host
+#       fdi.zipserver
+#       proxy.type       # == foreman or omitted goes to Satellite ==proxy uses proxy.url to connect through a satellite capsule
+#       proxy.url        # e.g. proxy.url=https://capsule.example.ca:9090
+
+
+####################################################
+
+source_iso_dir: "/usr/share/foreman-discovery-image/"
+destination_iso_dir: "{{ source_iso_dir }}"
+discovery_base_iso: "foreman-discovery-image-x86_64-4.1.0-61.el8sat.iso"
+satellite_fp_url: "https://sat6.parmstrong.ca:9090"
+provisioner_image_tmp: "/tmp/fdiimages/"
+
+discovery_remaster_images:
+  - name: "BaseVMboot"
+    source_iso: "{{ source_iso_dir }}{{ discovery_base_iso }}"
+    destination_iso: "{{ destination_iso_dir }}fdi-4.1.0-61.el8sat.vcenter.parmstrong.ca.iso"
+    kernel_parameters:
+      fdi.pxauto: 1
+      fdi.ipv4.method: "auto"
+      fdi.dns_nameserver: "192.168.252.5"
+      proxy.url: "https://sat6.parmstrong.ca"
+      proxy.type: "foreman"
+    final_format: "iso"
+    final_dest: "vmware"
+    upload_iso: true
+    upload_dest:
+      type: "vmware"
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      src_file: "{{ provisioner_image_tmp }}fdi-4.1.0-61.el8sat.vcenter.parmstrong.ca.iso"
+      dest_file: "{{ vcenter_base_folder_path }}/fdi-4.1.0-61.el8sat.vcenter.parmstrong.ca.iso"
+      datacenter: "{{ vcenter_datacenter }}"
+      datastore: "{{ vcenter_datastore }}"
+      validate_certs: "{{ vcenter_validate_certs }}"
